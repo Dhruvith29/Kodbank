@@ -16,11 +16,8 @@ CREATE TABLE IF NOT EXISTS Customer (
 -- Create CJWT Table (Token Revocation/Allowlist)
 CREATE TABLE IF NOT EXISTS CJWT (
     tid INT AUTO_INCREMENT PRIMARY KEY,
-    token TEXT NOT NULL,
-    cid INT NOT NULL,
-    exp TIMESTAMP NOT NULL,
+    token TEXT,
+    cid INT,
+    exp DATETIME,
     FOREIGN KEY (cid) REFERENCES Customer(cid) ON DELETE CASCADE
 );
-
--- Optional: Create a test user (password: 'password')
--- bcrypt hash for 'password' depends on salt, so skipping manual insertion to rely on /register

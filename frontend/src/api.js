@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: '/api', // Relative path for proxy/rewrite
-    withCredentials: true // Important: cookies
+    baseURL: '/api', // Relative for Vercel Rewrites
+    withCredentials: true
 });
 
 export default api;
