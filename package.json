@@ -2,7 +2,8 @@
     "name": "kodbank-monorepo",
     "version": "1.0.0",
     "scripts": {
-        "build": "cd frontend && npm install && npm run build"
+        "install-frontend": "cd frontend && npm install",
+        "build": "npm run install-frontend && cd frontend && npm run build"
     },
     "engines": {
         "node": ">=14"
