@@ -14,14 +14,18 @@ const SECRET_KEY = process.env.JWT_SECRET || 'your_super_secret_key_kodbank'; //
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:5173', // Vite default port
+    origin: ['http://localhost:5173', 'https://kodbank.vercel.app'], // Add your Vercel domain here
     credentials: true
 }));
 
-// --- Routes ---
+app.get('/', (req, res) => {
+    res.send('Kodbank Backend is Running');
+});
 
-// 1. POST /register
-app.post('/register', async (req, res) => {
+// --- Routes (Prefixed with /api for Vercel) ---
+
+// 1. POST /api/register
+app.post('/api/register', async (req, res) => {
     try {
         const { uname, password, email, phone } = req.body;
 
@@ -50,8 +54,8 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// 2. POST /login
-app.post('/login', async (req, res) => {
+// 2. POST /api/login
+app.post('/api/login', async (req, res) => {
     try {
         const { uname, password } = req.body;
 
@@ -90,8 +94,8 @@ app.post('/login', async (req, res) => {
         // Set httpOnly cookie
         res.cookie('token', token, {
             httpOnly: true,
-            secure: false, // Set to true in production with HTTPS
-            sameSite: 'strict',
+            secure: process.env.NODE_ENV === 'production', // True in prod (Vercel)
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict', // None for cross-site (if needed) or distinct domains
             maxAge: 3600000 // 1 hour
         });
 
@@ -103,8 +107,8 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// 3. GET /getBalance
-app.get('/getBalance', async (req, res) => {
+// 3. GET /api/getBalance
+app.get('/api/getBalance', async (req, res) => {
     try {
         const token = req.cookies.token;
 
@@ -147,6 +151,12 @@ app.get('/getBalance', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// Export for Vercel
+module.exports = app;
+
+// Only listen if run directly
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}

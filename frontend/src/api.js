@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:5000',
+    baseURL: '/api', // Relative path for proxy/rewrite
     withCredentials: true // Important: cookies
 });
 
